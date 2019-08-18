@@ -18,13 +18,11 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "*://exhentai.org/*"
-      ],
       "js": [
-        "src/js/index.js",
-        "src/js/login.js",
-        "src/js/logout.js"
+        "src/js/extension.js"
+      ],
+      "matches": [
+        "*://exhentai.org/"
       ],
       "css": []
     }

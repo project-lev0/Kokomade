@@ -1,6 +1,6 @@
 # Kokomade
 
-no dependencies, lightweight Google Chrome extension for access to ExHentai 
+no dependencies, lightweight Google Chrome extension for access to ExHentai.
 
 ## Usage
 

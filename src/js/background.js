@@ -1,107 +1,89 @@
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  //
-  const action = String(message.action).toLowerCase().trim()
-  const data = Object(message.data)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  const {action, data} = message
   const tabId = sender.tab.id
-  // LOGIN
-  if (action === 'login') {
-    deleteCookies();
-    (async () => {
-      try {
-        //
-        const res = await fetch(data.url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: data.data
-        })
-        //
-        const content = await res.text()
-        console.log(content)
-        // Success
-        if (content.includes('You are now logged in as')) {
-          sendResponse({ success: 'You are now logged in!' })
-          setTimeout(() => {
-            saveCookies()
-            reload(tabId)
+
+  switch (action) {
+    case 'checkCookieExists':
+      chrome.cookies.get({
+        name: 'ipb_member_id',
+        url: 'https://www.e-hentai.org'
+      }, (cookie) => {
+        if (cookie === null) {
+          sendResponse({
+            response: true,
+            fallback: 'redirectLoginPage'
           })
-          return
-        }
-        // Fail
-        if (content.includes('Username or password incorrect')) {
-          sendResponse({ fail: 'Username or password incorrect!' })
-        } else if (content.includes('You must already have registered for an account before you can log in')) {
-          sendResponse({ fail: 'Username does not exist!' })
         } else {
-          sendResponse({ fail: 'Error parsing login result page!' })
+          sendResponse({
+            response: true,
+            fallback: 'transferCookies'
+          })
         }
-      } catch (err) {
-        console.error(err)
-        sendResponse({ error: err.message })
-      }
-    })()
-    return true
+      })
+      break
+
+    case 'transferCookies':
+      chrome.cookies.getAll({
+        domain: '.e-hentai.org'
+      }, (cookies) => {
+        cookies.forEach(cookie => {
+          if (!['ipb_', 'uconfig'].some(v => cookie.name.includes(v))) {
+            return
+          }
+    
+          chrome.cookies.set({
+            url: 'https://exhentai.org/',
+            name: cookie.name,
+            value: cookie.value,
+            domain: '.exhentai.org',
+            path: '/',
+            expirationDate: cookie.expirationDate
+          })
+        })
+        sendResponse({
+          response: false,
+          fallback: 'endOfApplication'
+        })
+      })
+      break
+
+    case 'sessionReset':
+      alert('currently Login session is unauthorized of access this service or invalid. trying reset of service session.')
+
+      deleteCookies()
+      sendResponse({
+        response: false,
+        fallback: 'checkCookieExists'
+      })
+      break
+
+    default:
+      break
   }
-  // LOGOUT
-  if (action === 'logout') {
-    deleteCookies()
-    reload(tabId)
-  }
+
+  return true // wait for response. do not touch this line.
 })
 
-function reload(tabId) {
-  if (tabId) {
-    chrome.tabs.reload(tabId)
-    return
-  }
-  chrome.tabs.query({ active: true }, function (tabs) {
-    if (!tabs || !tabs.length) return
-    const id = tabs[0].id
-    chrome.tabs.reload(id)
-  })
-}
-
-function unixTime() {
-  return Math.round((new Date()).getTime() / 1000)
-}
-
-function cookieExpireTime() {
-  return unixTime() + 172800
-}
-
-function saveCookies() {
-  chrome.cookies.getAll({ domain: '.e-hentai.org' }, function (cookies) {
-    console.log(cookies)
+function deleteCookies() {
+  chrome.cookies.getAll({
+    url: 'https://e-hentai.org'
+  }, cookies => {
     cookies.forEach(cookie => {
-      if (!['ipb_', 'uconfig'].some(v => cookie.name.includes(v))) {
-        return
-      }
-      const cookieNew = {
-        url: 'https://exhentai.org/',
-        name: cookie.name,
-        value: cookie.value,
-        domain: '.exhentai.org',
-        path: '/',
-        // expirationDate: cookieExpireTime()
-        expirationDate: cookie.expirationDate
-      }
-      chrome.cookies.set(cookieNew)
+      chrome.cookies.remove({
+        url: 'https://e-hentai.org',
+        name: cookie.name
+      })
     })
   })
-}
 
-function deleteCookies() {
-  //
-  const ex = 'https://exhentai.org/'
-  const eh = 'http://e-hentai.org/'
-  //
-  chrome.cookies.remove({ url: ex, name: 'yay' })
-  chrome.cookies.remove({ url: ex, name: 'ipb_anonlogin' })
-  chrome.cookies.remove({ url: ex, name: 'ipb_member_id' })
-  chrome.cookies.remove({ url: ex, name: 'ipb_pass_hash' })
-  chrome.cookies.remove({ url: ex, name: 'ipb_session_id' })
-  //
-  chrome.cookies.remove({ url: eh, name: 'ipb_anonlogin' })
-  chrome.cookies.remove({ url: eh, name: 'ipb_member_id' })
-  chrome.cookies.remove({ url: eh, name: 'ipb_pass_hash' })
-  chrome.cookies.remove({ url: eh, name: 'ipb_session_id' })
+  chrome.cookies.getAll({
+    url: 'https://exhentai.org'
+  }, cookies => {
+    cookies.forEach(cookie => {
+      chrome.cookies.remove({
+        url: 'https://exhentai.org',
+        name: cookie.name
+      })
+    })
+  })
 }
