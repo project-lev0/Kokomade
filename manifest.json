@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Kokomade",
   "version": "1.0",
-  "description": "no dependencies, lightweight gateway Google Chrome extension for ExHentai",
+  "description": "no dependencies, lightweight Google Chrome extension for access to ExHentai",
   "icons": {
     "16": "ico/16.png",
     "32": "ico/32.png",

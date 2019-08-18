@@ -1,6 +1,6 @@
-# SadPanda
+# Kokomade
 
-Chromium extension to access ExHentai
+no dependencies, lightweight Google Chrome extension for access to ExHentai 
 
 ## Usage
 
@@ -8,5 +8,5 @@ Chromium extension to access ExHentai
 * Navigate to `chrome://extensions`
 * Toggle the `Developer Mode` slider in the top right corner
 * Click on `Load Unpacked` and navigate to the folder where you have the extension
-* Navigate to <https://exhentai.org/>
-* Log in and enjoy!
+* Log in e-hentai forum
+* Navigate to exhentai
