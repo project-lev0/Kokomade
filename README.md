@@ -1,3 +1,5 @@
+[한국어](https://github.com/project-lev0/Kokomade/blob/master/README-ko.md)
+
 # Kokomade
 
 no dependencies, lightweight Google Chrome extension for access to ExHentai.
