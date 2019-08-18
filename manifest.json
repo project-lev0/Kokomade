@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Sad Panda",
-  "version": "4.3",
-  "description": "Easy access to ExHentai",
+  "name": "Kokomade",
+  "version": "1.0",
+  "description": "no dependencies, lightweight gateway Google Chrome extension for ExHentai",
   "icons": {
     "16": "ico/16.png",
     "32": "ico/32.png",
@@ -22,9 +22,6 @@
         "*://exhentai.org/*"
       ],
       "js": [
-        "cdn/js/jquery.min.js",
-        "cdn/js/vue.min.js",
-        "cdn/js/vue-on-toast.min.js",
         "src/js/index.js",
         "src/js/login.js",
         "src/js/logout.js"
@@ -41,9 +38,8 @@
     "*://*.e-hentai.org/*"
   ],
   "web_accessible_resources": [
-    "cdn/*",
     "src/*"
   ],
-  "homepage_url": "https://github.com/HitomaruKonpaku/SadPanda",
+  "homepage_url": "https://github.com/project-lev0/Kokomade",
   "incognito": "split"
 }
