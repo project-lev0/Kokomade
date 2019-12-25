@@ -1,6 +1,6 @@
 (() => {
-  const image = document.querySelector('body > img[src*="https://exhentai.org/img/kokomade.jpg"]')
-  const isActive = image.length > 0 || document.body.innerHTML === ""
+  const image = document.querySelector('body > img')
+  const isActive = (image !== null && image.length === 1) || document.body.innerHTML === ""
   
   if (isActive === true) {
     //  check cookie ->
